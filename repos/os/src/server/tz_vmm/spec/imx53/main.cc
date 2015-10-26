@@ -19,6 +19,14 @@
 #include <drivers/trustzone.h>
 #include <vm_state.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <libc/fcntl.h>
+#include <libc/stdlib.h>
+#include <libc/unistd.h>
+#include <libc/ctype.h>
+
 /* local includes */
 #include <vm.h>
 #include <m4if.h>
@@ -139,7 +147,15 @@ int main()
 
 	PINF("Start virtual machine ...");
 	vmm.start();
-
-	sleep_forever();
+	
+	int fd;
+        char const *file_name = "/home/test.txt";
+       	if( ( fd = open( file_name, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR ) ) != -1 )
+        	write( fd,"TEST", 4 );
+       	else
+       		PINF("File could not be read");
+       	close( fd );
+       	
+        sleep_forever();
 	return 0;
 }
